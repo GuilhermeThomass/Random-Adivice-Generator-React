@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { Adivace, Container, Texto, Divider, Bottom } from "./styles/componetStyles";
+import Global from "./styles/global";
+import { FaDiceFive } from "react-icons/fa";
+import api from "./api";
+
+import { useEffect, useState} from "react";
 
 function App() {
+  
+  const [quote, setQuote] = useState();
+  useEffect(() => {
+    getQuoteApi()
+  }, []);
+
+const getQuoteApi = () => {
+  api
+      .get("/advice")
+      .then((response) => setQuote(response.data))
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+      });
+}
+
+function handleClick(){
+  getQuoteApi()
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Container>
+        <Global/>
+        <Texto>ADVICE #{quote?.slip.id}</Texto>
+        <Adivace>"{quote?.slip.advice}"</Adivace>
+        <Divider></Divider>
+        <Bottom onClick={handleClick}>
+          <FaDiceFive size={25} style={{
+            backgroundColor : "transparent",
+          }} />
+        </Bottom>
+      </Container>
+    </>
   );
 }
 
